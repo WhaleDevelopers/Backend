@@ -38,4 +38,7 @@ out/
 
 ##custom##
 src/main/resources/credentials.properties
+src/main/resources/validation.properties
 src/main/resources/certs/
+
+src/main/java/com/kim/devstu/config
