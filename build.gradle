@@ -37,8 +37,11 @@ dependencies {
 	/* DataBase - MongoDB */
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
+	/* Redis */
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.apache.commons:commons-pool2'
 
-	/* API Document   http://localhost:8080/swagger-ui.html */
+	/* API Document   https://localhost:8443/swagger-ui.html */
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 
 	/* Test */
