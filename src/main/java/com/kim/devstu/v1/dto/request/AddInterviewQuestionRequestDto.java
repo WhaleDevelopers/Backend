@@ -1,8 +1,6 @@
-package com.kim.devstu.v1.dto.request;
+package com.kim.devstu.v1.dto.request; // 패키지명 확인
 
 import lombok.*;
-import org.bson.types.ObjectId;
-
 import java.util.List;
 
 @Getter
@@ -10,11 +8,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddInterviewQuestionRequestDto {
-    private ObjectId categoryId;
+    private String categoryId;
+
     private String question;
     private String answer;
+
+    @Builder.Default
     private String difficulty = "etc";
+
     private List<String> tags;
-    private Integer version = 1;
+
+    @Builder.Default
     private Boolean isActive = true;
+
+    private Integer version;
 }

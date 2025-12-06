@@ -15,16 +15,21 @@ import java.util.List;
 @NoArgsConstructor
 public class AddInterviewQuestionResponseDto {
     private ObjectId categoryId;
+    private String categoryDisplayName;
     private String question;
     private String answer;
-    private String difficulty ;
+    private String difficulty;
     private List<String> tags;
     private Integer version;
     private Boolean isActive;
 
     public static AddInterviewQuestionResponseDto fromEntity(InterviewQuestion entity) {
+        InterviewQuestion.CategoryInfo categoryInfo = entity.getCategory();
+
         return AddInterviewQuestionResponseDto.builder()
-                .categoryId(entity.getCategoryId())
+                .categoryDisplayName(categoryInfo != null ? categoryInfo.getDisplayName() : null)
+                .categoryId(categoryInfo != null ? categoryInfo.getId() : null)
+
                 .question(entity.getQuestion())
                 .answer(entity.getAnswer())
                 .difficulty(entity.getDifficulty())
@@ -34,5 +39,3 @@ public class AddInterviewQuestionResponseDto {
                 .build();
     }
 }
-
-

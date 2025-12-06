@@ -2,21 +2,19 @@ package com.kim.devstu.v1.mapper;
 
 import com.kim.devstu.model.InterviewQuestion;
 import com.kim.devstu.v1.dto.request.AddInterviewQuestionRequestDto;
-import org.springframework.stereotype.Component;
 
-@Component
 public class InterviewQuestionMapper {
 
-    public static InterviewQuestion toEntity(AddInterviewQuestionRequestDto dto) {
+    public static InterviewQuestion toEntity(AddInterviewQuestionRequestDto dto, InterviewQuestion.CategoryInfo categoryInfo) {
         return InterviewQuestion.builder()
-                .categoryId(dto.getCategoryId())
+                .category(categoryInfo)
                 .question(dto.getQuestion())
                 .answer(dto.getAnswer())
                 .difficulty(dto.getDifficulty())
                 .tags(dto.getTags())
-                .version(dto.getVersion())
-                .isActive(dto.getIsActive())
+                .usageCount(0)
+                .version(dto.getVersion() != null ? dto.getVersion() : 1)
+                .isActive(true)
                 .build();
     }
-
 }

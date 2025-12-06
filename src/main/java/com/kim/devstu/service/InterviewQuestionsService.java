@@ -9,10 +9,10 @@ import com.kim.devstu.v1.dto.response.InterviewQuestionResponseDto;
 import com.kim.devstu.v1.mapper.InterviewQuestionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.stereotype.Service;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -23,30 +23,35 @@ public class InterviewQuestionsService {
 
     private final InterviewQuestionsRepository interviewQuestionsRepository;
     private final MongoTemplate mongoTemplate;
-    private final InterviewQuestionAggregationBuilder interviewQuestionAggregationBuilder;
+    private final InterviewQuestionAggregationBuilder aggregationBuilder;
 
-    /* 카테고리와 개수로 랜덤 질문 조회 (카테고리 displayName 포함) */
-//    @Cacheable(value = "interview-questions", key = "'category-' + #categoryId + '-size-' + #size + '-random-with-category'")
-    public List<InterviewQuestionResponseDto> findRandomQuestionsByCategoryWithSize(ObjectId categoryId, int size) {
-        log.info("카테고리 {}의 랜덤 면접 질문을 {}개 조회합니다. (카테고리 정보 포함)", categoryId, size);
+    private final CategoryService categoryService;
 
-        if (categoryId == null)  throw new IllegalArgumentException("카테고리를 선택해주세요.");
+    /* 카테고리와 개수로 랜덤 질문 조회 */
+    public List<InterviewQuestionResponseDto> findRandomQuestionsByCategoryWithSize(String categoryId, int size) {
+        log.info("카테고리 {} 랜덤 질문 {}개 조회", categoryId, size);
 
-        Aggregation aggregation = interviewQuestionAggregationBuilder.buildRandomQuestionsWithCategoryAggregation(categoryId, size);
+        Aggregation aggregation = aggregationBuilder.buildRandomQuestionsAggregation(categoryId, size);
 
-        return mongoTemplate.aggregate(
+        List<InterviewQuestion> entities = mongoTemplate.aggregate(
                 aggregation,
                 "interview_questions",
-                InterviewQuestionResponseDto.class
+                InterviewQuestion.class
         ).getMappedResults();
+
+        return InterviewQuestionResponseDto.toDtoList(entities);
     }
 
-    /**
-     * Create and save InterviewQuestion from AddInterviewQuestionRequestDto (API usage)
-     */
+    // 질문 추가
     public AddInterviewQuestionResponseDto addInterviewQuestion(AddInterviewQuestionRequestDto req) {
-        InterviewQuestion entity  = InterviewQuestionMapper.toEntity(req);
+        InterviewQuestion.CategoryInfo categoryInfo = categoryService.getCategoryInfoById(new ObjectId(req.getCategoryId()));
+
+        InterviewQuestion entity = InterviewQuestionMapper.toEntity(req, categoryInfo);
+
         InterviewQuestion saved = interviewQuestionsRepository.save(entity);
+
+        log.info("질문 저장 완료. ID: {}, Category: {}", saved.getId(), saved.getCategory().getDisplayName());
+
         return AddInterviewQuestionResponseDto.fromEntity(saved);
     }
 }

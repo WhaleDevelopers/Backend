@@ -19,15 +19,16 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "interview_questions")
 @CompoundIndexes({
-    @CompoundIndex(name = "categoryId_isActive_idx", def = "{ 'category_id': 1, 'is_active' : -1 }"),
-    @CompoundIndex(name = "tags_isActive_idx",       def = "{ 'tags'       : 1, 'is_active' : -1 }")
+        @CompoundIndex(name = "categoryId_isActive_idx", def = "{ 'category._id': 1, 'is_active' : -1 }"),
+        @CompoundIndex(name = "tags_isActive_idx",       def = "{ 'tags'       : 1, 'is_active' : -1 }")
 })
 public class InterviewQuestion {
 
-    @Id private ObjectId id;
+    @Id
+    private ObjectId id;
 
-    @Field("category_id")
-    private ObjectId categoryId;
+    @Field("category")
+    private CategoryInfo category;
 
     @Field("question")
     private String question;
@@ -64,4 +65,22 @@ public class InterviewQuestion {
     @LastModifiedDate
     @Field("updated_at")
     private LocalDateTime updatedAt;
+
+    /*--------------------------------------------------------------------*/
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ToString
+    public static class CategoryInfo {
+
+        @Field("_id")
+        private ObjectId id;
+
+        @Field("name")
+        private String name;
+
+        @Field("display_name")
+        private String displayName;
+    }
 }

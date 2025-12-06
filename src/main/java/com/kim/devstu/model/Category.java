@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Document(collection = "categories")
 @CompoundIndexes({
-    @CompoundIndex(name = "isActive_sortOrder_desc_idx", def = "{ 'is_active': -1, 'sort_order': 1 }")
+        @CompoundIndex(name = "isActive_sortOrder_desc_idx", def = "{ 'is_active': -1, 'sort_order': 1 }")
 })
 public class Category {
 

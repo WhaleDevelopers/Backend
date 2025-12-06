@@ -1,8 +1,6 @@
 package com.kim.devstu.v1.controller;
 
-import com.kim.devstu.model.Category;
 import com.kim.devstu.service.CategoryService;
-import com.kim.devstu.v1.dto.request.AddCategoryRequestDto;
 import com.kim.devstu.v1.dto.request.AddCategoryRequestDto;
 import com.kim.devstu.v1.dto.response.CategoryResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
